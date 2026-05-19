@@ -954,8 +954,9 @@ footer {
   <div class="cat-header">
     <button class="back-btn" onclick="goBack('ventas')">← Ventas</button>
     <div class="cat-title">REPORTES</div>
+    <button class="add-doc-btn" onclick="openAddDoc('ventas-reportes')">+ Agregar</button>
   </div>
-  <div class="cat-grid">
+  <div class="cat-grid" style="border-bottom:1px solid var(--border);">
     <button class="cat-card" onclick="window.open('https://reporteventas.vercel.app','_blank')">
       <div class="cat-card-left">
         <div class="cat-card-num">01</div>
@@ -965,6 +966,7 @@ footer {
       <div class="cat-card-arrow">↗</div>
     </button>
   </div>
+  <div class="doc-grid" id="docs-ventas-reportes"></div>
 </div>
 
 <!-- VENTAS · Métricas -->
@@ -972,8 +974,9 @@ footer {
   <div class="cat-header">
     <button class="back-btn" onclick="goBack('ventas')">← Ventas</button>
     <div class="cat-title">MÉTRICAS</div>
+    <button class="add-doc-btn" onclick="openAddDoc('ventas-metricas')">+ Agregar</button>
   </div>
-  <div class="cat-grid">
+  <div class="cat-grid" style="border-bottom:1px solid var(--border);">
     <button class="cat-card" onclick="window.open('URL_DASHBOARD_UTM','_blank')">
       <div class="cat-card-left">
         <div class="cat-card-num">01</div>
@@ -983,6 +986,7 @@ footer {
       <div class="cat-card-arrow">↗</div>
     </button>
   </div>
+  <div class="doc-grid" id="docs-ventas-metricas"></div>
 </div>
 
 <!-- VENTAS · SOP -->
@@ -1096,8 +1100,22 @@ footer {
 </div>
 
 <!-- MARKETING · sub-vistas (próximamente) -->
-<div id="view-mkt-reportes" class="view"><div class="cat-header"><button class="back-btn" onclick="goBack('marketing')">← Marketing</button><div class="cat-title">REPORTES</div></div><div class="soon-pg"><div class="s-title">PRÓXIMAMENTE</div><div class="s-sub">En construcción</div></div></div>
-<div id="view-mkt-metricas" class="view"><div class="cat-header"><button class="back-btn" onclick="goBack('marketing')">← Marketing</button><div class="cat-title">MÉTRICAS</div></div><div class="soon-pg"><div class="s-title">PRÓXIMAMENTE</div><div class="s-sub">En construcción</div></div></div>
+<div id="view-mkt-reportes" class="view">
+  <div class="cat-header">
+    <button class="back-btn" onclick="goBack('marketing')">← Marketing</button>
+    <div class="cat-title">REPORTES</div>
+    <button class="add-doc-btn" onclick="openAddDoc('mkt-reportes')">+ Agregar</button>
+  </div>
+  <div class="doc-grid" id="docs-mkt-reportes"></div>
+</div>
+<div id="view-mkt-metricas" class="view">
+  <div class="cat-header">
+    <button class="back-btn" onclick="goBack('marketing')">← Marketing</button>
+    <div class="cat-title">MÉTRICAS</div>
+    <button class="add-doc-btn" onclick="openAddDoc('mkt-metricas')">+ Agregar</button>
+  </div>
+  <div class="doc-grid" id="docs-mkt-metricas"></div>
+</div>
 <div id="view-mkt-sop" class="view">
   <div class="cat-header">
     <button class="back-btn" onclick="goBack('marketing')">← Marketing</button>
@@ -1112,19 +1130,18 @@ footer {
   <div class="cat-header">
     <button class="back-btn" onclick="goBack('producto')">← Producto</button>
     <div class="cat-title">REPORTES</div>
+    <button class="add-doc-btn" onclick="openAddDoc('prod-reportes')">+ Agregar</button>
   </div>
-  <div class="cat-grid">
-    <button class="cat-card" onclick="window.open('URL_TRACKER_ALUMNOS','_blank')">
-      <div class="cat-card-left">
-        <div class="cat-card-num">01</div>
-        <div class="cat-card-name">TRACKER ALUMNOS</div>
-        <div class="cat-card-hint">Seguimiento · Fases · Renovaciones</div>
-      </div>
-      <div class="cat-card-arrow">↗</div>
-    </button>
-  </div>
+  <div class="doc-grid" id="docs-prod-reportes"></div>
 </div>
-<div id="view-prod-metricas" class="view"><div class="cat-header"><button class="back-btn" onclick="goBack('producto')">← Producto</button><div class="cat-title">MÉTRICAS</div></div><div class="soon-pg"><div class="s-title">PRÓXIMAMENTE</div><div class="s-sub">En construcción</div></div></div>
+<div id="view-prod-metricas" class="view">
+  <div class="cat-header">
+    <button class="back-btn" onclick="goBack('producto')">← Producto</button>
+    <div class="cat-title">MÉTRICAS</div>
+    <button class="add-doc-btn" onclick="openAddDoc('prod-metricas')">+ Agregar</button>
+  </div>
+  <div class="doc-grid" id="docs-prod-metricas"></div>
+</div>
 <div id="view-prod-sop" class="view">
   <div class="cat-header">
     <button class="back-btn" onclick="goBack('producto')">← Producto</button>
@@ -1236,7 +1253,7 @@ var _pendingThumb = null;
 var _allDocs = {}; // { sectionId: [{id, title, pdf_url, thumb_url, created_at}] }
 
 // ── SECTIONS CONFIG ──
-var SOP_SECTIONS = ['ventas-sop-closer','ventas-sop-setter','ventas-sop-otros','prod-sop','mkt-sop'];
+var SOP_SECTIONS = ['ventas-sop-closer','ventas-sop-setter','ventas-sop-otros','ventas-reportes','ventas-metricas','prod-sop','prod-reportes','prod-metricas','mkt-sop','mkt-reportes','mkt-metricas'];
 
 // ── LOAD DOCS ──
 async function loadAllDocs() {
