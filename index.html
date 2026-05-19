@@ -1392,6 +1392,10 @@ async function saveDoc() {
     });
     setProgress(100);
 
+    if (!res.ok) {
+      var errText = await res.text();
+      throw new Error('DB error ' + res.status + ': ' + errText);
+    }
     var data = await res.json();
     var doc = data[0] || { id: ts, section: _currentSection, title: title, pdf_url: pdfUrl, thumb_url: thumbUrl, created_at: new Date().toISOString() };
     if (!_allDocs[_currentSection]) _allDocs[_currentSection] = [];
