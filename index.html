@@ -868,11 +868,35 @@ footer {
       </div>
       <div class="cat-card-arrow">↗</div>
     </button>
-    <button class="cat-card" onclick="goSub('ventas-sop')">
+    <button class="cat-card" onclick="goSub('ventas-sop-closer')">
       <div class="cat-card-left">
         <div class="cat-card-num">04</div>
         <div class="cat-card-name">SOP</div>
         <div class="cat-card-hint">Scripts · Procesos · Docs</div>
+      </div>
+      <div class="cat-card-arrow">↗</div>
+    </button>
+    <button class="cat-card" onclick="goSub('ventas-recursos-setter')">
+      <div class="cat-card-left">
+        <div class="cat-card-num">05</div>
+        <div class="cat-card-name">RECURSOS SETTER</div>
+        <div class="cat-card-hint">Docs · Materiales</div>
+      </div>
+      <div class="cat-card-arrow">↗</div>
+    </button>
+    <button class="cat-card" onclick="goSub('ventas-recursos-closer')">
+      <div class="cat-card-left">
+        <div class="cat-card-num">06</div>
+        <div class="cat-card-name">RECURSOS CLOSER</div>
+        <div class="cat-card-hint">Docs · Materiales</div>
+      </div>
+      <div class="cat-card-arrow">↗</div>
+    </button>
+    <button class="cat-card" onclick="goSub('ventas-recursos-varios')">
+      <div class="cat-card-left">
+        <div class="cat-card-num">07</div>
+        <div class="cat-card-name">RECURSOS VARIOS</div>
+        <div class="cat-card-hint">Docs · Varios</div>
       </div>
       <div class="cat-card-arrow">↗</div>
     </button>
@@ -907,6 +931,14 @@ footer {
         <div class="cat-card-num">03</div>
         <div class="cat-card-name">SOP</div>
         <div class="cat-card-hint">Procesos · Guías · Docs</div>
+      </div>
+      <div class="cat-card-arrow">↗</div>
+    </button>
+    <button class="cat-card" onclick="goSub('mkt-lead-magnets')">
+      <div class="cat-card-left">
+        <div class="cat-card-num">04</div>
+        <div class="cat-card-name">LEAD MAGNETS</div>
+        <div class="cat-card-hint">Docs · Recursos</div>
       </div>
       <div class="cat-card-arrow">↗</div>
     </button>
@@ -1099,6 +1131,36 @@ footer {
   <div class="doc-grid" id="docs-ventas-sop-otros"></div>
 </div>
 
+<!-- VENTAS · RECURSOS SETTER -->
+<div id="view-ventas-recursos-setter" class="view">
+  <div class="cat-header">
+    <button class="back-btn" onclick="goBack('ventas')">← Ventas</button>
+    <div class="cat-title">RECURSOS SETTER</div>
+    <button class="add-doc-btn" onclick="openAddDoc('ventas-recursos-setter')">+ Agregar</button>
+  </div>
+  <div class="doc-grid" id="docs-ventas-recursos-setter"></div>
+</div>
+
+<!-- VENTAS · RECURSOS CLOSER -->
+<div id="view-ventas-recursos-closer" class="view">
+  <div class="cat-header">
+    <button class="back-btn" onclick="goBack('ventas')">← Ventas</button>
+    <div class="cat-title">RECURSOS CLOSER</div>
+    <button class="add-doc-btn" onclick="openAddDoc('ventas-recursos-closer')">+ Agregar</button>
+  </div>
+  <div class="doc-grid" id="docs-ventas-recursos-closer"></div>
+</div>
+
+<!-- VENTAS · RECURSOS VARIOS -->
+<div id="view-ventas-recursos-varios" class="view">
+  <div class="cat-header">
+    <button class="back-btn" onclick="goBack('ventas')">← Ventas</button>
+    <div class="cat-title">RECURSOS VARIOS</div>
+    <button class="add-doc-btn" onclick="openAddDoc('ventas-recursos-varios')">+ Agregar</button>
+  </div>
+  <div class="doc-grid" id="docs-ventas-recursos-varios"></div>
+</div>
+
 <!-- MARKETING · sub-vistas (próximamente) -->
 <div id="view-mkt-reportes" class="view">
   <div class="cat-header">
@@ -1123,6 +1185,16 @@ footer {
     <button class="add-doc-btn" onclick="openAddDoc('mkt-sop')">+ Agregar</button>
   </div>
   <div class="doc-grid" id="docs-mkt-sop"></div>
+</div>
+
+<!-- MARKETING · LEAD MAGNETS -->
+<div id="view-mkt-lead-magnets" class="view">
+  <div class="cat-header">
+    <button class="back-btn" onclick="goBack('marketing')">← Marketing</button>
+    <div class="cat-title">LEAD MAGNETS</div>
+    <button class="add-doc-btn" onclick="openAddDoc('mkt-lead-magnets')">+ Agregar</button>
+  </div>
+  <div class="doc-grid" id="docs-mkt-lead-magnets"></div>
 </div>
 
 <!-- PRODUCTO · sub-vistas -->
@@ -1253,7 +1325,7 @@ var _pendingThumb = null;
 var _allDocs = {}; // { sectionId: [{id, title, pdf_url, thumb_url, created_at}] }
 
 // ── SECTIONS CONFIG ──
-var SOP_SECTIONS = ['ventas-sop-closer','ventas-sop-setter','ventas-sop-otros','ventas-reportes','ventas-metricas','prod-sop','prod-reportes','prod-metricas','mkt-sop','mkt-reportes','mkt-metricas'];
+var SOP_SECTIONS = ['ventas-sop-closer','ventas-sop-setter','ventas-sop-otros','ventas-reportes','ventas-metricas','ventas-recursos-setter','ventas-recursos-closer','ventas-recursos-varios','prod-sop','prod-reportes','prod-metricas','mkt-sop','mkt-reportes','mkt-metricas','mkt-lead-magnets'];
 
 // ── LOAD DOCS ──
 async function loadAllDocs() {
