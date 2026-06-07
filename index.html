@@ -81,25 +81,25 @@ nav {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 14px 18px;
+  padding: 13px 18px;
   border: none;
   border-bottom: 1px solid var(--g200);
   background: var(--wh);
   cursor: pointer;
-  font-family: var(--f);
-  font-size: 13px;
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 12px;
   font-weight: 700;
   color: var(--g500);
   text-align: left;
   width: 100%;
   transition: background .12s, color .12s;
   user-select: none;
-  letter-spacing: .06em;
+  letter-spacing: .12em;
   text-transform: uppercase;
 }
 .area-btn:hover { background: var(--g50); color: var(--bk); }
 .area-dot {
-  width: 7px; height: 7px;
+  width: 8px; height: 8px;
   border-radius: 50%;
   flex-shrink: 0;
   background: var(--g300);
@@ -115,9 +115,25 @@ nav {
 .area-chev.open { transform: rotate(180deg); }
 
 /* colores activos por área */
-.area-btn.open { color: var(--bk); background: var(--g100); border-left: 3px solid var(--bk); padding-left: 15px; }
-.area-btn.open .area-dot { background: var(--bk); }
-.area-btn.open .area-chev { color: var(--bk); }
+.area-btn.av.open { color: #1e3a8a; background: #eff6ff; border-left: 3px solid #1e3a8a; padding-left: 15px; }
+.area-btn.av.open .area-dot { background: #1e3a8a; }
+.area-btn.av:hover { color: #1e3a8a; }
+
+.area-btn.am.open { color: #6b21a8; background: #faf5ff; border-left: 3px solid #6b21a8; padding-left: 15px; }
+.area-btn.am.open .area-dot { background: #6b21a8; }
+.area-btn.am:hover { color: #6b21a8; }
+
+.area-btn.ap.open { color: #14532d; background: #f0fdf4; border-left: 3px solid #14532d; padding-left: 15px; }
+.area-btn.ap.open .area-dot { background: #14532d; }
+.area-btn.ap:hover { color: #14532d; }
+
+.area-btn.ao.open { color: #9a3412; background: #fff7ed; border-left: 3px solid #9a3412; padding-left: 15px; }
+.area-btn.ao.open .area-dot { background: #9a3412; }
+.area-btn.ao:hover { color: #9a3412; }
+
+/* organigrama y llamadas */
+#area-organigrama.open, #area-llamadas.open { color: #0f172a; background: #f1f5f9; border-left: 3px solid #0f172a; padding-left: 15px; }
+#area-organigrama.open .area-dot, #area-llamadas.open .area-dot { background: #0f172a; }
 
 /* cuerpo del área */
 .area-body { display: none; }
@@ -584,6 +600,43 @@ nav {
   line-height: 1.55;
 }
 .link-card-actions { display: flex; gap: 8px; flex-shrink: 0; align-items: center; }
+
+/* ══ AUTH ══ */
+#auth-overlay{position:fixed;inset:0;background:#f0f2fa;z-index:9999;display:flex;align-items:center;justify-content:center}
+.auth-card{background:#fff;border-radius:16px;padding:40px 36px;width:360px;box-shadow:0 8px 40px rgba(0,0,0,.12);border:1px solid #e4e6ef;font-family:system-ui,sans-serif;text-align:center}
+.auth-logo{font-size:26px;font-weight:800;color:#0f1220;letter-spacing:-.5px;margin-bottom:2px}
+.auth-sub{font-size:11px;color:#6070a0;margin-bottom:24px}
+.auth-lbl{font-size:11px;font-weight:600;color:#4a5580;display:block;margin-bottom:4px;text-align:left}
+.auth-inp{width:100%;padding:9px 12px;border:1.5px solid #d0d4e0;border-radius:8px;font-size:13px;font-family:inherit;outline:none;box-sizing:border-box;transition:border-color .15s;text-align:left}
+.auth-inp:focus{border-color:#1e2845}
+.auth-btn{width:100%;padding:10px;background:#1e2845;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;margin-top:14px;font-family:inherit}
+.auth-btn:hover{background:#2563eb}
+.auth-err{color:#cc3333;font-size:11px;margin-top:8px;display:none;text-align:center}
+
+/* ══ ADMIN MODAL ══ */
+#admin-modal{display:none;position:fixed;inset:0;background:rgba(15,18,32,.55);z-index:2000;align-items:center;justify-content:center}
+#admin-modal.open{display:flex}
+.admin-wrap{background:#fff;border-radius:14px;width:680px;max-width:96vw;max-height:88vh;display:flex;flex-direction:column;box-shadow:0 12px 48px rgba(0,0,0,.18);overflow:hidden}
+.admin-hd{background:#1e2845;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.admin-hd-title{color:#fff;font-size:13px;font-weight:700;font-family:system-ui,sans-serif}
+.admin-tabs{display:flex;border-bottom:1px solid #e4e6ef;background:#f8f9fc;flex-shrink:0}
+.atab{padding:10px 18px;font-size:11px;font-weight:700;color:#6070a0;cursor:pointer;border-bottom:2px solid transparent;font-family:system-ui,sans-serif;text-transform:uppercase;letter-spacing:.4px}
+.atab.on{color:#1e2845;border-bottom-color:#1e2845;background:#fff}
+.admin-bd{flex:1;overflow-y:auto;padding:18px 20px;font-family:system-ui,sans-serif}
+.urow{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:7px;font-size:12px}
+.urow:nth-child(odd){background:#f0f2fa}
+.urow:nth-child(even){background:#fff}
+.urole{font-size:9px;padding:2px 7px;border-radius:4px;font-weight:700;text-transform:uppercase;flex-shrink:0}
+.urole-admin{background:#1e2845;color:#fff}
+.urole-user{background:#e8ecfa;color:#1e2845}
+.pchip{font-size:10px;padding:3px 9px;border-radius:5px;background:#eef0f6;color:#4a5580;cursor:pointer;border:1px solid #d0d4e0;font-family:system-ui,sans-serif;font-weight:600;transition:all .15s}
+.pchip.on{background:#1e2845;color:#fff;border-color:#1e2845}
+.add-form{background:#f8f9fc;border-radius:8px;padding:14px;border:1px solid #e4e6ef;margin-bottom:16px}
+
+/* nav admin btn */
+.nav-admin-btn{padding:5px 12px;background:#1e2845;color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;margin-left:auto}
+.nav-logout{padding:5px 10px;background:none;color:#6070a0;border:1px solid #d0d4e0;border-radius:6px;font-size:11px;cursor:pointer;font-family:inherit;margin-left:6px}
+.nav-user-badge{font-size:10px;color:#6070a0;margin-left:auto;font-family:system-ui,sans-serif}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -593,6 +646,7 @@ nav {
   <span class="nav-logo">Lathos<sup>®</sup></span>
   <div class="nav-divider"></div>
   <span class="nav-sub" id="nav-ctx">Hub de Operaciones</span>
+  <span id="nav-user-info"></span>
 </nav>
 
 <div class="app">
@@ -607,7 +661,7 @@ nav {
       <span class="area-chev ti ti-chevron-down" id="chev-ventas"></span>
     </button>
     <div class="area-body" id="body-ventas">
-      <button class="sb-item" onclick="showPanel('v-dashboard','Ventas','Dashboard')"><i class="ti ti-layout-dashboard"></i>Dashboard</button>
+      <button class="sb-item" onclick="window.open('Dashboard ventas/index.html','_blank')"><i class="ti ti-layout-dashboard"></i>Dashboard</button>
       <button class="sb-item" onclick="showPanel('v-reportes','Ventas','Reportes')"><i class="ti ti-report-analytics"></i>Reportes</button>
       <button class="sb-item" onclick="showPanel('v-metricas','Ventas','Métricas')"><i class="ti ti-chart-line"></i>Métricas</button>
 
@@ -742,6 +796,12 @@ nav {
       <span class="area-name">Organigrama</span>
     </button>
 
+    <!-- LLAMADAS -->
+    <button class="area-btn" id="area-llamadas" onclick="showPanel('llamadas','Llamadas','Equipo')">
+      <span class="area-dot"></span>
+      <span class="area-name">Llamadas equipo</span>
+    </button>
+
 </div><!-- /sidebar -->
 
   <!-- ══ MAIN ══ -->
@@ -865,6 +925,18 @@ body{background:#ffffff;padding:24px 16px}
   </div>
 </div>
     </div>
+    <!-- LLAMADAS PANEL -->
+    <div class="panel" id="panel-llamadas">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--g100);flex-shrink:0">
+        <div>
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--g400)">Lathos</div>
+          <div style="font-size:18px;font-weight:700;color:var(--bk)">Llamadas equipo</div>
+        </div>
+        <button id="btn-add-llamada" onclick="openAddLlamada()" style="padding:8px 16px;background:#1e2845;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">+ Agregar</button>
+      </div>
+      <div id="llamadas-grid" style="padding:20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;overflow-y:auto"></div>
+    </div>
+
   </div><!-- /main -->
 </div><!-- /app -->
 
@@ -982,7 +1054,7 @@ function toggleL2(id, chevId) {
    NAVEGACIÓN
 ══════════════════════════════════════ */
 // Secciones que NO tienen + Agregar
-var NO_ADD_SECTIONS = ['organigrama','v-dashboard','v-reportes','v-metricas','m-analitica','m-reportes','m-metricas','p-reportes','p-metricas','o-metricas','o-procesos','o-automatizaciones'];
+var NO_ADD_SECTIONS = ['organigrama','llamadas','v-dashboard','v-reportes','v-metricas','m-analitica','m-reportes','m-metricas','p-reportes','p-metricas','o-metricas','o-procesos','o-automatizaciones'];
 
 // Secciones de links Fathom (Entrenamientos)
 var LINK_SECTIONS = ['v-ent-setter','v-ent-closer','v-ent-cold'];
@@ -1003,6 +1075,16 @@ function showPanel(sectionId, area, section) {
     var btnAdd = document.getElementById('btn-add');
     if(btnAdd) btnAdd.style.display = 'none';
     document.getElementById('panel-organigrama').classList.add('active');
+    return;
+  }
+
+  if(sectionId === 'llamadas') {
+    var btnAdd = document.getElementById('btn-add');
+    if(btnAdd) btnAdd.style.display = 'none';
+    var btnAddLlamada = document.getElementById('btn-add-llamada');
+    if(btnAddLlamada) btnAddLlamada.style.display = currentUser && currentUser.role==='admin' ? '' : 'none';
+    document.getElementById('panel-llamadas').classList.add('active');
+    renderLlamadas();
     return;
   }
   var btnAdd = document.getElementById('btn-add');
@@ -1315,6 +1397,336 @@ async function saveDoc() {
     setSaveBtn(false);
   }
 }
+/* ══ LLAMADAS EQUIPO ══ */
+var _llEditIdx = null;
+
+function getLlamadas(){ try{return JSON.parse(localStorage.getItem('hub_llamadas')||'[]');}catch(e){return [];} }
+function saveLlamadasStore(d){ localStorage.setItem('hub_llamadas', JSON.stringify(d)); }
+
+function renderLlamadas(){
+  var grid = document.getElementById('llamadas-grid');
+  if(!grid) return;
+  var items = getLlamadas();
+  var isAdmin = currentUser && currentUser.role === 'admin';
+  if(!items.length){
+    grid.innerHTML = '<div style="color:#6070a0;font-size:13px;padding:20px 0">No hay llamadas guardadas. Agregá la primera.</div>';
+    return;
+  }
+  grid.innerHTML = items.map(function(it, i){
+    return '<div style="background:#fff;border-radius:10px;border:1px solid #e4e6ef;padding:16px;display:flex;flex-direction:column;gap:10px">'
+      +'<div style="font-size:13px;font-weight:700;color:#0f1220">'+escH(it.name)+'</div>'
+      +'<a href="'+escH(it.url)+'" target="_blank" style="font-size:11px;color:#2563eb;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="'+escH(it.url)+'">🎥 Ver grabación →</a>'
+      +(isAdmin?'<button onclick="editLlamada('+i+')" style="align-self:flex-start;padding:4px 12px;background:#f0f2fa;border:none;border-radius:6px;font-size:11px;cursor:pointer;font-family:inherit;font-weight:600">Editar</button>':'')
+      +'</div>';
+  }).join('');
+}
+
+function escH(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function openAddLlamada(){
+  _llEditIdx = null;
+  document.getElementById('llamada-modal-title').textContent = 'Agregar llamada';
+  document.getElementById('ll-nombre').value = '';
+  document.getElementById('ll-url').value = '';
+  document.getElementById('ll-del-btn').style.display = 'none';
+  document.getElementById('llamada-modal').style.display = 'flex';
+}
+
+function editLlamada(idx){
+  var items = getLlamadas();
+  _llEditIdx = idx;
+  var it = items[idx];
+  document.getElementById('llamada-modal-title').textContent = 'Editar llamada';
+  document.getElementById('ll-nombre').value = it.name;
+  document.getElementById('ll-url').value = it.url;
+  document.getElementById('ll-del-btn').style.display = '';
+  document.getElementById('llamada-modal').style.display = 'flex';
+}
+
+function closeLlamadaModal(){ document.getElementById('llamada-modal').style.display = 'none'; }
+
+function saveLlamada(){
+  var name = document.getElementById('ll-nombre').value.trim();
+  var url  = document.getElementById('ll-url').value.trim();
+  if(!name || !url){ alert('Completá nombre y enlace'); return; }
+  var items = getLlamadas();
+  if(_llEditIdx !== null){ items[_llEditIdx] = {name:name, url:url}; }
+  else { items.push({name:name, url:url}); }
+  saveLlamadasStore(items);
+  closeLlamadaModal();
+  renderLlamadas();
+}
+
+function deleteLlamada(){
+  if(!confirm('¿Eliminar esta llamada?')) return;
+  var items = getLlamadas();
+  items.splice(_llEditIdx, 1);
+  saveLlamadasStore(items);
+  closeLlamadaModal();
+  renderLlamadas();
+}
+var SECTIONS = ['ventas','marketing','producto','operaciones','organigrama','llamadas'];
+var SECTION_LABELS = {ventas:'Ventas',marketing:'Marketing',producto:'Producto',operaciones:'Operaciones',organigrama:'Organigrama',llamadas:'Llamadas equipo'};
+var currentUser = null;
+
+function authGetUsers() {
+  try { return JSON.parse(localStorage.getItem('lh_users') || '[]'); } catch(e) { return []; }
+}
+function authSaveUsers(u) { localStorage.setItem('lh_users', JSON.stringify(u)); }
+
+function authInit() {
+  var users = authGetUsers();
+  if (!users.find(function(u){ return u.email === 'urieldegiorgis@gmail.com'; })) {
+    users.unshift({ email:'urieldegiorgis@gmail.com', role:'admin', areas: SECTIONS.slice() });
+    authSaveUsers(users);
+  }
+  // Migrate old users that have pass field — keep them, just ignore pass on login
+}
+
+function authLogin() {
+  var email = document.getElementById('a-email').value.trim().toLowerCase();
+  var errEl = document.getElementById('a-err');
+  errEl.style.display = 'none';
+  authInit();
+  var users = authGetUsers();
+  var user = users.find(function(u){ return u.email.toLowerCase() === email; });
+  if (!user) { errEl.style.display = 'block'; return; }
+
+  // Show loading screen with paint-on animation
+  var loading = document.getElementById('auth-loading');
+  loading.style.display = 'flex';
+  document.getElementById('auth-overlay').style.display = 'none';
+
+  // Animate logo reveal over 1.8s using div width
+  var revealEl = document.getElementById('lathos-reveal');
+  if (revealEl) {
+    revealEl.style.width = '0px';
+    var startTime = null;
+    var duration = 1800;
+    function animateReveal(ts) {
+      if (!startTime) startTime = ts;
+      var progress = Math.min((ts - startTime) / duration, 1);
+      // ease-out curve
+      var eased = 1 - Math.pow(1 - progress, 3);
+      revealEl.style.width = (eased * 360) + 'px';
+      if (progress < 1) requestAnimationFrame(animateReveal);
+    }
+    requestAnimationFrame(animateReveal);
+  }
+
+  setTimeout(function() {
+    loading.style.display = 'none';
+    currentUser = user;
+    authApply();
+  }, 3000);
+}
+
+function authApply() {
+  if (!currentUser) return;
+  var isAdmin = currentUser.role === 'admin';
+  var allowed = isAdmin ? SECTIONS : (currentUser.areas || []);
+
+  // Show ALL sidebar sections (everyone sees them) but mark locked ones
+  SECTIONS.forEach(function(sec) {
+    var areaBtn = document.getElementById('area-' + sec);
+    var hasAccess = allowed.indexOf(sec) >= 0;
+    if (areaBtn) {
+      areaBtn.style.display = '';
+      areaBtn.style.opacity = hasAccess ? '' : '0.45';
+      areaBtn.title = hasAccess ? '' : 'No tienes permiso para acceder';
+    }
+  });
+
+  // Non-admins: hide add/delete buttons
+  if (!isAdmin) {
+    var addBtn = document.getElementById('btn-add');
+    if (addBtn) addBtn.style.display = 'none';
+    document.querySelectorAll('.doc-btn.danger, .doc-btn[onclick*="deleteDoc"]').forEach(function(b){ b.style.display='none'; });
+  }
+
+  // Inject nav buttons
+  var navInfo = document.getElementById('nav-user-info');
+  if (navInfo) {
+    if (isAdmin) {
+      navInfo.innerHTML =
+        '<button class="nav-admin-btn" onclick="adminOpen()">⚙ Admin</button>' +
+        '<button class="nav-logout" onclick="authLogout()">Salir</button>';
+    } else {
+      navInfo.innerHTML =
+        '<span class="nav-user-badge">' + currentUser.email + '</span>' +
+        '<button class="nav-logout" onclick="authLogout()">Salir</button>';
+    }
+  }
+}
+
+function authCheckAccess(sec) {
+  if (!currentUser) return false;
+  if (currentUser.role === 'admin') return true;
+  return (currentUser.areas || []).indexOf(sec) >= 0;
+}
+
+function showNoAccess() {
+  var existing = document.getElementById('no-access-toast');
+  if (existing) { existing.style.opacity='1'; setTimeout(function(){ existing.style.opacity='0'; }, 2200); return; }
+  var toast = document.createElement('div');
+  toast.id = 'no-access-toast';
+  toast.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#1e2845;color:#fff;padding:20px 32px;border-radius:12px;font-family:system-ui,sans-serif;font-size:14px;font-weight:700;z-index:9998;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.3);transition:opacity .4s';
+  toast.innerHTML = '🔒 No tienes permiso para acceder<br><span style="font-size:11px;font-weight:400;opacity:.7;display:block;margin-top:4px">Contacta con el administrador</span>';
+  document.body.appendChild(toast);
+  setTimeout(function(){ toast.style.opacity='0'; setTimeout(function(){ toast.remove(); }, 400); }, 2200);
+}
+
+function authLogout() {
+  currentUser = null;
+  location.reload();
+}
+
+/* ── ADMIN PANEL ── */
+var _atab = 'users';
+
+function adminOpen()  { document.getElementById('admin-modal').classList.add('open'); adminRender(); }
+function adminClose() { document.getElementById('admin-modal').classList.remove('open'); }
+function adminTab(t)  {
+  _atab = t;
+  document.getElementById('atab-users').classList.toggle('on', t==='users');
+  document.getElementById('atab-perms').classList.toggle('on', t==='perms');
+  adminRender();
+}
+
+function adminRender() {
+  var bd = document.getElementById('admin-bd');
+  var users = authGetUsers();
+  if (_atab === 'users') {
+    var h = '<div class="add-form">'
+      + '<div style="font-size:12px;font-weight:700;color:#1e2845;margin-bottom:10px">Agregar nuevo usuario</div>'
+      + '<div style="display:grid;grid-template-columns:1fr 90px;gap:8px;align-items:end">'
+      + '<div><label style="font-size:10px;color:#6070a0;font-weight:600;display:block;margin-bottom:3px">Email</label>'
+      + '<input id="nu-e" type="email" placeholder="email@..." style="width:100%;padding:7px 10px;border:1px solid #d0d4e0;border-radius:6px;font-size:12px;font-family:inherit;box-sizing:border-box"></div>'
+      + '<div><label style="font-size:10px;color:#6070a0;font-weight:600;display:block;margin-bottom:3px">Rol</label>'
+      + '<select id="nu-r" style="width:100%;padding:7px 8px;border:1px solid #d0d4e0;border-radius:6px;font-size:12px;font-family:inherit">'
+      + '<option value="user">Usuario</option><option value="admin">Admin</option></select></div>'
+      + '</div>'
+      + '<button onclick="adminAddUser()" style="margin-top:10px;padding:7px 16px;background:#1e2845;color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit">+ Agregar</button>'
+      + '</div>';
+
+    h += '<div style="font-size:10px;font-weight:700;color:#6070a0;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">' + users.length + ' usuarios registrados</div>';
+    users.forEach(function(u, i) {
+      var isMe = currentUser && u.email.toLowerCase() === currentUser.email.toLowerCase();
+      var areas = u.role === 'admin' ? '<span style="color:#6070a0;font-size:10px">Acceso total</span>'
+        : '<span style="color:#6070a0;font-size:10px">' + (u.areas||[]).map(function(a){ return SECTION_LABELS[a]||a; }).join(', ') + '</span>';
+      h += '<div class="urow">'
+        + '<span style="flex:1;font-weight:600;color:#0f1220;font-size:12px">' + adminEsc(u.email) + '</span>'
+        + '<span class="urole urole-' + u.role + '">' + u.role + '</span>'
+        + areas
+        + (!isMe ? '<button onclick="adminEditPerms(' + i + ')" style="padding:3px 10px;background:#eef0f6;border:none;border-radius:5px;font-size:10px;cursor:pointer;font-family:inherit;font-weight:600">Permisos</button>' : '')
+        + (!isMe ? '<button onclick="adminDelUser(' + i + ')" style="padding:3px 8px;background:#fee2e2;color:#cc3333;border:none;border-radius:5px;font-size:10px;cursor:pointer;font-family:inherit;font-weight:700">×</button>' : '')
+        + '</div>';
+    });
+    bd.innerHTML = h;
+
+  } else {
+    // Perms tab
+    var nonAdmins = users.filter(function(u){ return u.role !== 'admin'; });
+    var h2 = '';
+    if (!nonAdmins.length) {
+      h2 = '<div style="color:#6070a0;font-size:12px;padding:20px 0">No hay usuarios con rol "usuario" todavía.</div>';
+    } else {
+      nonAdmins.forEach(function(u) {
+        var idx = users.indexOf(u);
+        h2 += '<div style="background:#f8f9fc;border-radius:9px;padding:14px;margin-bottom:10px;border:1px solid #e4e6ef">'
+          + '<div style="font-size:12px;font-weight:700;color:#0f1220;margin-bottom:10px">' + adminEsc(u.email) + '</div>'
+          + '<div style="display:flex;flex-wrap:wrap;gap:7px">';
+        SECTIONS.forEach(function(sec) {
+          var has = (u.areas||[]).indexOf(sec) >= 0;
+          h2 += '<button class="pchip' + (has?' on':'') + '" onclick="adminTogglePerm(' + idx + ',\'' + sec + '\')">' + (SECTION_LABELS[sec]||sec) + '</button>';
+        });
+        h2 += '</div></div>';
+      });
+    }
+    bd.innerHTML = h2;
+  }
+}
+
+function adminEsc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function adminAddUser() {
+  var email = document.getElementById('nu-e').value.trim().toLowerCase();
+  var role  = document.getElementById('nu-r').value;
+  if (!email) { alert('Ingresá un email'); return; }
+  var users = authGetUsers();
+  if (users.find(function(u){ return u.email.toLowerCase()===email; })) { alert('Ese email ya existe'); return; }
+  users.push({ email:email, role:role, areas: role==='admin' ? SECTIONS.slice() : [] });
+  authSaveUsers(users);
+  adminRender();
+}
+
+function adminDelUser(idx) {
+  if (!confirm('¿Eliminar este usuario?')) return;
+  var users = authGetUsers(); users.splice(idx,1); authSaveUsers(users); adminRender();
+}
+
+function adminEditPerms(idx) {
+  adminTab('perms');
+}
+
+function adminTogglePerm(idx, sec) {
+  var users = authGetUsers();
+  var u = users[idx]; if (!u) return;
+  if (!u.areas) u.areas = [];
+  var i = u.areas.indexOf(sec);
+  if (i >= 0) u.areas.splice(i,1); else u.areas.push(sec);
+  authSaveUsers(users);
+  adminRender();
+}
+
+// Patch toggleArea and showPanel with permission checks
+window.addEventListener('load', function() {
+  authInit();
+  document.getElementById('auth-overlay').style.display = 'flex';
+  setTimeout(function(){ document.getElementById('a-email').focus(); }, 100);
+
+  // Wrap toggleArea
+  var _origToggleArea = window.toggleArea;
+  window.toggleArea = function(area) {
+    if (!authCheckAccess(area)) { showNoAccess(); return; }
+    _origToggleArea.apply(this, arguments);
+  };
+
+  // Wrap showPanel
+  var _origShowPanel = window.showPanel;
+  window.showPanel = function(sectionId, area, section) {
+    // Map sectionId to area key
+    var areaKey = sectionId.split('-')[0];
+    if (sectionId === 'organigrama') areaKey = 'organigrama';
+    if (!authCheckAccess(areaKey)) { showNoAccess(); return; }
+    _origShowPanel.apply(this, arguments);
+  };
+
+  // Patch loadDocs and loadLinks to re-hide delete buttons for non-admins
+  if (typeof loadDocs === 'function') {
+    _origLoadDocs = loadDocs;
+    window.loadDocs = async function() {
+      await _origLoadDocs.apply(this, arguments);
+      if (currentUser && currentUser.role !== 'admin') {
+        document.querySelectorAll('.doc-btn.danger').forEach(function(b){ b.style.display='none'; });
+        var addBtn = document.getElementById('btn-add');
+        if (addBtn) addBtn.style.display = 'none';
+      }
+    };
+  }
+  if (typeof loadLinks === 'function') {
+    _origLoadLinks = loadLinks;
+    window.loadLinks = async function() {
+      await _origLoadLinks.apply(this, arguments);
+      if (currentUser && currentUser.role !== 'admin') {
+        document.querySelectorAll('.doc-btn.danger').forEach(function(b){ b.style.display='none'; });
+        var addBtn = document.getElementById('btn-add');
+        if (addBtn) addBtn.style.display = 'none';
+      }
+    };
+  }
+});
+
 </script>
 <script id="equipo-js">
 
@@ -1371,5 +1783,72 @@ document.getElementById('modal-bg').addEventListener('click',function(e){if(e.ta
 render();
 
 </script>
+
+<!-- LOGIN OVERLAY -->
+<div id="auth-overlay">
+  <div class="auth-card">
+    <div class="auth-logo">LATHOS<sup style="font-size:10px;opacity:.4;font-weight:400;vertical-align:super">®</sup></div>
+    <div class="auth-sub">Hub interno · Acceso restringido</div>
+    <label class="auth-lbl">Email</label>
+    <input class="auth-inp" id="a-email" type="email" placeholder="tu@email.com" autocomplete="email" onkeydown="if(event.key==='Enter')authLogin()">
+    <div class="auth-err" id="a-err">Email no reconocido.</div>
+    <button class="auth-btn" onclick="authLogin()">Entrar al Hub</button>
+  </div>
+</div>
+
+<!-- LOADING SCREEN -->
+<div id="auth-loading" style="display:none;position:fixed;inset:0;background:#0f1220;z-index:10000;align-items:center;justify-content:center;flex-direction:column">
+  <div style="position:relative;width:360px;height:90px;overflow:hidden">
+    <div style="position:absolute;inset:0;font-size:86px;font-weight:800;font-family:system-ui,sans-serif;color:rgba(255,255,255,0.07);letter-spacing:-3px;display:flex;align-items:center;justify-content:center">LATHOS</div>
+    <div id="lathos-reveal" style="position:absolute;top:0;left:0;bottom:0;width:0;overflow:hidden;white-space:nowrap">
+      <div style="font-size:86px;font-weight:800;font-family:system-ui,sans-serif;color:#ffffff;letter-spacing:-3px;display:flex;align-items:center;justify-content:center;width:360px">LATHOS</div>
+    </div>
+  </div>
+  <div style="margin-top:22px;display:flex;gap:6px">
+    <div style="width:7px;height:7px;border-radius:50%;background:#fff;animation:dot1 1s ease-in-out infinite"></div>
+    <div style="width:7px;height:7px;border-radius:50%;background:#fff;animation:dot2 1s ease-in-out infinite"></div>
+    <div style="width:7px;height:7px;border-radius:50%;background:#fff;animation:dot3 1s ease-in-out infinite"></div>
+  </div>
+  <style>
+    @keyframes dot1{0%,100%{opacity:.15;transform:scale(1)}33%{opacity:1;transform:scale(1.3)}}
+    @keyframes dot2{0%,100%{opacity:.15;transform:scale(1)}50%{opacity:1;transform:scale(1.3)}}
+    @keyframes dot3{0%,100%{opacity:.15;transform:scale(1)}66%{opacity:1;transform:scale(1.3)}}
+  </style>
+</div>
+
+<!-- ADMIN MODAL -->
+<div id="admin-modal">
+  <div class="admin-wrap">
+    <div class="admin-hd">
+      <span class="admin-hd-title">⚙ Configuración y Permisos</span>
+      <button onclick="adminClose()" style="background:none;border:none;color:rgba(255,255,255,.6);font-size:18px;cursor:pointer;line-height:1">✕</button>
+    </div>
+    <div class="admin-tabs">
+      <div class="atab on" id="atab-users" onclick="adminTab('users')">Usuarios</div>
+      <div class="atab" id="atab-perms" onclick="adminTab('perms')">Permisos por área</div>
+    </div>
+    <div class="admin-bd" id="admin-bd"></div>
+  </div>
+</div>
+
+<!-- LLAMADAS MODAL -->
+<div id="llamada-modal" style="display:none;position:fixed;inset:0;background:rgba(15,18,32,.5);z-index:3000;align-items:center;justify-content:center">
+  <div style="background:#fff;border-radius:14px;padding:24px;width:400px;max-width:95vw;box-shadow:0 8px 40px rgba(0,0,0,.18);font-family:system-ui,sans-serif">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+      <span style="font-size:14px;font-weight:700;color:#0f1220" id="llamada-modal-title">Agregar llamada</span>
+      <button onclick="closeLlamadaModal()" style="background:none;border:none;font-size:18px;cursor:pointer;color:#6070a0">✕</button>
+    </div>
+    <label style="font-size:11px;font-weight:600;color:#4a5580;display:block;margin-bottom:4px">Nombre</label>
+    <input id="ll-nombre" placeholder="Ej: Reunión semanal ventas" style="width:100%;padding:9px 12px;border:1.5px solid #d0d4e0;border-radius:8px;font-size:13px;font-family:inherit;margin-bottom:12px;box-sizing:border-box;outline:none">
+    <label style="font-size:11px;font-weight:600;color:#4a5580;display:block;margin-bottom:4px">Enlace Fathom</label>
+    <input id="ll-url" placeholder="https://fathom.video/..." style="width:100%;padding:9px 12px;border:1.5px solid #d0d4e0;border-radius:8px;font-size:13px;font-family:inherit;margin-bottom:16px;box-sizing:border-box;outline:none">
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button id="ll-del-btn" onclick="deleteLlamada()" style="display:none;padding:8px 14px;background:#fee2e2;color:#cc3333;border:none;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;margin-right:auto">Eliminar</button>
+      <button onclick="closeLlamadaModal()" style="padding:8px 16px;background:#f0f2fa;color:#0f1220;border:none;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit">Cancelar</button>
+      <button onclick="saveLlamada()" style="padding:8px 16px;background:#1e2845;color:#fff;border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">Guardar</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
