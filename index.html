@@ -723,7 +723,6 @@ nav {
       <span class="area-chev ti ti-chevron-down" id="chev-marketing"></span>
     </button>
     <div class="area-body" id="body-marketing">
-      <button class="sb-item" onclick="showPanel('m-analitica','Marketing','Analítica')"><i class="ti ti-chart-dots"></i>Analítica</button>
       <button class="sb-item" onclick="showPanel('m-reportes','Marketing','Reportes')"><i class="ti ti-report-analytics"></i>Reportes</button>
       <button class="sb-item" onclick="showPanel('m-metricas','Marketing','Métricas')"><i class="ti ti-chart-line"></i>Métricas</button>
       <button class="sb-item" onclick="toggleL1('msop')">
@@ -1051,7 +1050,7 @@ function toggleL2(id, chevId) {
    NAVEGACIÓN
 ══════════════════════════════════════ */
 // Secciones que NO tienen + Agregar
-var NO_ADD_SECTIONS = ['organigrama','llamadas','v-dashboard','v-reportes','v-metricas','m-analitica','m-reportes','m-metricas','p-reportes','p-metricas','o-metricas','o-procesos','o-automatizaciones'];
+var NO_ADD_SECTIONS = ['organigrama','llamadas','v-dashboard'];
 
 // Secciones de links Fathom (Entrenamientos)
 var LINK_SECTIONS = ['v-ent-setter','v-ent-closer','v-ent-cold'];
@@ -1204,6 +1203,11 @@ function extractPath(url) {
 /* ══════════════════════════════════════
    MODAL — abre el correcto según sección
 ══════════════════════════════════════ */
+function openModalLink() {
+  resetModalLink();
+  document.getElementById('modal-link').classList.add('open');
+}
+
 function openModalLink() {
   resetModalLink();
   document.getElementById('modal-link').classList.add('open');
@@ -1403,7 +1407,7 @@ async function saveDoc() {
   }
 }
 /* ══ LLAMADAS EQUIPO ══ */
-var _llEditIdx = null;
+var _llEditId = null;
 
 /* ── LLAMADAS SUPABASE ── */
 async function getLlamadasSB() {
