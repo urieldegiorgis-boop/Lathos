@@ -661,7 +661,7 @@ nav {
       <span class="area-chev ti ti-chevron-down" id="chev-ventas"></span>
     </button>
     <div class="area-body" id="body-ventas">
-      <button class="sb-item" onclick="window.open('Dashboard ventas/index.html','_blank')"><i class="ti ti-layout-dashboard"></i>Dashboard</button>
+      <button class="sb-item" onclick="window.open('https://dashboardventas-two.vercel.app','_blank')"><i class="ti ti-layout-dashboard"></i>Dashboard</button>
       <button class="sb-item" onclick="showPanel('v-reportes','Ventas','Reportes')"><i class="ti ti-report-analytics"></i>Reportes</button>
       <button class="sb-item" onclick="showPanel('v-metricas','Ventas','Métricas')"><i class="ti ti-chart-line"></i>Métricas</button>
 
@@ -766,15 +766,9 @@ nav {
         <span class="sb-chev ti ti-chevron-down" id="c-psop"></span>
       </button>
       <div class="sb-l2" id="psop">
-        <button class="sb-l2-item" onclick="toggleL2('psop-pm','c-psop-pm')">
-          <i class="ti ti-user-check"></i>PM
-          <span class="sb-chev ti ti-chevron-down" id="c-psop-pm"></span>
-        </button>
-        <div class="sb-l3" id="psop-pm">
-          <button class="sb-l3-item" onclick="showPanel('p-sop-pm-onb','SOP · PM','Onboarding')"><i class="ti ti-rocket"></i>Onboarding</button>
-          <button class="sb-l3-item" onclick="showPanel('p-sop-pm-proc','SOP · PM','Procesos')"><i class="ti ti-git-branch"></i>Procesos</button>
-          <button class="sb-l3-item" onclick="showPanel('p-sop-pm-rec','SOP · PM','Recursos')"><i class="ti ti-files"></i>Recursos</button>
-        </div>
+        <button class="sb-l2-item" onclick="showPanel('p-sop-pm-onb','SOP · Producto','Onboarding')"><i class="ti ti-rocket"></i>Onboarding</button>
+        <button class="sb-l2-item" onclick="showPanel('p-sop-pm-proc','SOP · Producto','Procesos')"><i class="ti ti-git-branch"></i>Procesos</button>
+        <button class="sb-l2-item" onclick="showPanel('p-sop-pm-rec','SOP · Producto','Recursos')"><i class="ti ti-files"></i>Recursos</button>
       </div>
     </div>
 
@@ -832,11 +826,14 @@ nav {
           <span class="sep">·</span>
           <b id="bc-section">—</b>
         </div>
-        <button class="btn-add" id="btn-add" onclick="openModal()">+ Agregar</button>
+        <div style="display:flex;gap:6px">
+          <button class="btn-add" id="btn-add" onclick="openModal()" style="padding:6px 12px;font-size:11px">+ PDF</button>
+          <button class="btn-add" id="btn-add-link" onclick="openModalLink()" style="background:#2563eb;padding:6px 12px;font-size:11px">+ Link</button>
+        </div>
       </div>
       <div class="divider"></div>
       <div class="doc-grid" id="doc-grid"></div>
-      <div class="link-grid" id="link-grid" style="display:none"></div>
+      <div class="link-grid" id="link-grid" style="display:flex;flex-wrap:wrap"></div>
       <div class="empty" id="doc-empty" style="display:none">
         <i class="ti ti-folder-open" style="font-size:32px;color:var(--g300)"></i>
         <div class="empty-text">Sin entradas</div>
@@ -1091,16 +1088,21 @@ function showPanel(sectionId, area, section) {
   var isNoAdd = NO_ADD_SECTIONS.indexOf(sectionId) !== -1;
   if (btnAdd) btnAdd.style.display = isNoAdd ? 'none' : '';
 
-  // Cambiar texto del botón según tipo
-  var isLink = LINK_SECTIONS.indexOf(sectionId) !== -1;
-  if (btnAdd && !isNoAdd) btnAdd.textContent = isLink ? '+ Agregar grabación' : '+ Agregar';
+  // Mostrar siempre ambos grids y ambos botones
+  var btnAddLink = document.getElementById('btn-add-link');
+  if (isNoAdd) {
+    if (btnAddLink) btnAddLink.style.display = 'none';
+  } else {
+    if (btnAdd) { btnAdd.style.display = ''; btnAdd.textContent = '+ PDF'; }
+    if (btnAddLink) btnAddLink.style.display = '';
+  }
 
-  // Mostrar grid correcto
-  document.getElementById('doc-grid').style.display  = isLink ? 'none' : '';
-  document.getElementById('link-grid').style.display = isLink ? 'flex' : 'none';
+  document.getElementById('doc-grid').style.display  = '';
+  document.getElementById('link-grid').style.display = 'flex';
 
   document.getElementById('panel-docs').classList.add('active');
-  isLink ? loadLinks() : loadDocs();
+  loadDocs();
+  loadLinks();
 }
 
 /* ══════════════════════════════════════
@@ -1202,6 +1204,11 @@ function extractPath(url) {
 /* ══════════════════════════════════════
    MODAL — abre el correcto según sección
 ══════════════════════════════════════ */
+function openModalLink() {
+  resetModalLink();
+  document.getElementById('modal-link').classList.add('open');
+}
+
 function openModal() {
   if (LINK_SECTIONS.indexOf(currentSection) !== -1) {
     resetModalLink();
@@ -1254,10 +1261,8 @@ function resetModalLink() {
    CARGAR / RENDER LINKS (Fathom)
 ══════════════════════════════════════ */
 async function loadLinks() {
-  var grid  = document.getElementById('link-grid');
-  var empty = document.getElementById('doc-empty');
-  grid.innerHTML = '<div style="padding:16px;color:#A3A3A3;font-size:12px">Cargando…</div>';
-  empty.style.display = 'none';
+  var grid = document.getElementById('link-grid');
+  grid.innerHTML = '';
 
   var { data, error } = await sb
     .from('recordings')
@@ -1266,7 +1271,7 @@ async function loadLinks() {
     .order('date', { ascending: false });
 
   if (error) {
-    grid.innerHTML = '<div style="padding:16px;color:#DC2626;font-size:12px">Error: ' + error.message + '</div>';
+    grid.innerHTML = '<div style="padding:16px;color:#DC2626;font-size:12px">Error links: ' + error.message + '</div>';
     return;
   }
 
@@ -1275,14 +1280,14 @@ async function loadLinks() {
 
 function renderLinks(list) {
   var grid  = document.getElementById('link-grid');
-  var empty = document.getElementById('doc-empty');
   grid.innerHTML = '';
 
   if (!list || list.length === 0) {
-    empty.style.display = 'flex';
-    return;
+    return; // don't touch doc-empty — loadDocs handles it
   }
-  empty.style.display = 'none';
+
+  var empty = document.getElementById('doc-empty');
+  if (empty) empty.style.display = 'none';
 
   list.forEach(function(rec) {
     var card = document.createElement('div');
@@ -1400,31 +1405,39 @@ async function saveDoc() {
 /* ══ LLAMADAS EQUIPO ══ */
 var _llEditIdx = null;
 
-function getLlamadas(){ try{return JSON.parse(localStorage.getItem('hub_llamadas')||'[]');}catch(e){return [];} }
-function saveLlamadasStore(d){ localStorage.setItem('hub_llamadas', JSON.stringify(d)); }
+/* ── LLAMADAS SUPABASE ── */
+async function getLlamadasSB() {
+  try {
+    var {data,error} = await sb.from('llamadas').select('*').order('created_at',{ascending:false});
+    if(error) throw error;
+    return data||[];
+  } catch(e) { console.error('getLlamadas error',e); return []; }
+}
 
-function renderLlamadas(){
+async function renderLlamadas(){
   var grid = document.getElementById('llamadas-grid');
   if(!grid) return;
-  var items = getLlamadas();
+  grid.innerHTML = '<div style="color:#6070a0;font-size:12px;padding:20px 0">Cargando...</div>';
+  var items = await getLlamadasSB();
   var isAdmin = currentUser && currentUser.role === 'admin';
   if(!items.length){
     grid.innerHTML = '<div style="color:#6070a0;font-size:13px;padding:20px 0">No hay llamadas guardadas. Agregá la primera.</div>';
     return;
   }
-  grid.innerHTML = items.map(function(it, i){
+  grid.innerHTML = items.map(function(it){
     return '<div style="background:#fff;border-radius:10px;border:1px solid #e4e6ef;padding:16px;display:flex;flex-direction:column;gap:10px">'
-      +'<div style="font-size:13px;font-weight:700;color:#0f1220">'+escH(it.name)+'</div>'
+      +'<div style="font-size:13px;font-weight:700;color:#0f1220">'+escH(it.nombre)+'</div>'
       +'<a href="'+escH(it.url)+'" target="_blank" style="font-size:11px;color:#2563eb;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="'+escH(it.url)+'">🎥 Ver grabación →</a>'
-      +(isAdmin?'<button onclick="editLlamada('+i+')" style="align-self:flex-start;padding:4px 12px;background:#f0f2fa;border:none;border-radius:6px;font-size:11px;cursor:pointer;font-family:inherit;font-weight:600">Editar</button>':'')
+      +(isAdmin?'<button data-id="'+it.id+'" onclick="editLlamadaSB(this.dataset.id)" style="align-self:flex-start;padding:4px 12px;background:#f0f2fa;border:none;border-radius:6px;font-size:11px;cursor:pointer;font-family:inherit;font-weight:600">Editar</button>':'')
       +'</div>';
   }).join('');
 }
 
 function escH(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
+var _llEditId = null;
 function openAddLlamada(){
-  _llEditIdx = null;
+  _llEditId = null;
   document.getElementById('llamada-modal-title').textContent = 'Agregar llamada';
   document.getElementById('ll-nombre').value = '';
   document.getElementById('ll-url').value = '';
@@ -1432,36 +1445,39 @@ function openAddLlamada(){
   document.getElementById('llamada-modal').style.display = 'flex';
 }
 
-function editLlamada(idx){
-  var items = getLlamadas();
-  _llEditIdx = idx;
-  var it = items[idx];
-  document.getElementById('llamada-modal-title').textContent = 'Editar llamada';
-  document.getElementById('ll-nombre').value = it.name;
-  document.getElementById('ll-url').value = it.url;
-  document.getElementById('ll-del-btn').style.display = '';
-  document.getElementById('llamada-modal').style.display = 'flex';
+function editLlamadaSB(id){
+  _llEditId = id;
+  getLlamadasSB().then(function(items){
+    var it = items.find(function(x){return String(x.id)===String(id);});
+    if(!it) return;
+    document.getElementById('llamada-modal-title').textContent = 'Editar llamada';
+    document.getElementById('ll-nombre').value = it.nombre;
+    document.getElementById('ll-url').value = it.url;
+    document.getElementById('ll-del-btn').style.display = '';
+    document.getElementById('llamada-modal').style.display = 'flex';
+  });
 }
 
 function closeLlamadaModal(){ document.getElementById('llamada-modal').style.display = 'none'; }
 
-function saveLlamada(){
-  var name = document.getElementById('ll-nombre').value.trim();
-  var url  = document.getElementById('ll-url').value.trim();
-  if(!name || !url){ alert('Completá nombre y enlace'); return; }
-  var items = getLlamadas();
-  if(_llEditIdx !== null){ items[_llEditIdx] = {name:name, url:url}; }
-  else { items.push({name:name, url:url}); }
-  saveLlamadasStore(items);
+async function saveLlamada(){
+  var nombre = document.getElementById('ll-nombre').value.trim();
+  var url    = document.getElementById('ll-url').value.trim();
+  if(!nombre || !url){ alert('Completá nombre y enlace'); return; }
+  if(_llEditId !== null) {
+    var {error} = await sb.from('llamadas').update({nombre:nombre, url:url}).eq('id', _llEditId);
+  } else {
+    var {error} = await sb.from('llamadas').insert({nombre:nombre, url:url});
+  }
+  if(error){ alert('Error al guardar: '+error.message); return; }
   closeLlamadaModal();
   renderLlamadas();
 }
 
-function deleteLlamada(){
+async function deleteLlamada(){
   if(!confirm('¿Eliminar esta llamada?')) return;
-  var items = getLlamadas();
-  items.splice(_llEditIdx, 1);
-  saveLlamadasStore(items);
+  var {error} = await sb.from('llamadas').delete().eq('id', _llEditId);
+  if(error){ alert('Error al eliminar: '+error.message); return; }
   closeLlamadaModal();
   renderLlamadas();
 }
