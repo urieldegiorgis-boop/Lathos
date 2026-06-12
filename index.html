@@ -651,10 +651,28 @@ nav {
 #panel-ventas-dash.expanded{position:fixed!important;inset:0!important;z-index:9998!important;background:var(--wh);padding:0!important;}
 #panel-ventas-dash.expanded #ventas-dash-frame{min-height:100vh!important;height:100vh!important;}
 </style>
+<style>
+/* ── Responsive móvil (Hub) ── */
+.menu-toggle{ display:none; background:none; border:none; color:#fff; font-size:22px; cursor:pointer; padding:2px 6px; line-height:1; margin-right:2px; }
+.sidebar-overlay{ display:none; position:fixed; inset:52px 0 0 0; background:rgba(0,0,0,.5); z-index:90; }
+@media (max-width: 860px){
+  .menu-toggle{ display:block; }
+  nav{ padding:0 14px; gap:10px; }
+  .sidebar{
+    position:fixed; top:52px; left:0; bottom:0; height:auto;
+    width:82vw; max-width:320px; margin:0; border-radius:0;
+    transform:translateX(-106%); transition:transform .25s ease; z-index:95;
+  }
+  .sidebar.open{ transform:translateX(0); box-shadow:0 0 30px rgba(0,0,0,.5); }
+  .sidebar-overlay.show{ display:block; }
+  .main{ width:100%; min-width:0; }
+}
+</style>
 </head>
 <body>
 
 <nav>
+  <button class="menu-toggle" onclick="toggleSidebar()" aria-label="Menú">☰</button>
   <span class="nav-logo">LATHOS<sup style="font-size:8px;opacity:.35;font-weight:400;vertical-align:super;letter-spacing:0">®</sup></span>
   <div class="nav-divider"></div>
   <span class="nav-sub" id="nav-ctx">Hub de Operaciones</span>
@@ -662,6 +680,7 @@ nav {
 </nav>
 
 <div class="app">
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar(false)"></div>
 
   <!-- ══ SIDEBAR ══ -->
   <div class="sidebar">
@@ -1129,7 +1148,16 @@ var NO_ADD_SECTIONS = ['organigrama','llamadas','v-dashboard'];
 // Secciones de links Fathom (Entrenamientos)
 var LINK_SECTIONS = ['v-ent-setter','v-ent-closer','v-ent-cold'];
 
+function toggleSidebar(force){
+  var sb=document.querySelector('.sidebar'), ov=document.getElementById('sidebarOverlay');
+  if(!sb) return;
+  var open = (force===undefined) ? !sb.classList.contains('open') : !!force;
+  sb.classList.toggle('open', open);
+  if(ov) ov.classList.toggle('show', open);
+}
+function closeSidebarMobile(){ if(window.innerWidth<=860) toggleSidebar(false); }
 function showPanel(sectionId, area, section) {
+  closeSidebarMobile();
   document.querySelectorAll('.sb-item,.sb-l2-item,.sb-l3-item').forEach(function(el) {
     el.classList.remove('active');
   });
@@ -1604,11 +1632,65 @@ async function deleteLlamada(){
 var SECTIONS = ['ventas','marketing','producto','operaciones','organigrama','llamadas'];
 var SECTION_LABELS = {ventas:'Ventas',marketing:'Marketing',producto:'Producto',operaciones:'Operaciones',organigrama:'Organigrama',llamadas:'Llamadas equipo'};
 var currentUser = null;
+var AUTH_USERS = [];
+var SESSION_TOKEN = null;
+var sessionCheckTimer = null;
 
-function authGetUsers() {
-  try { return JSON.parse(localStorage.getItem('lh_users') || '[]'); } catch(e) { return []; }
+async function authLoadUsers() {
+  try {
+    var resp = await sb.from('hub_users').select('*');
+    if (resp && resp.data) {
+      AUTH_USERS = resp.data.map(function(r){ return { email:r.email, role:r.role||'user', areas:(r.areas||[]), session_token:r.session_token||null }; });
+    }
+  } catch(e) { console.error('hub_users load', e); }
+  if (!AUTH_USERS.find(function(u){ return u.email === 'urieldegiorgis@gmail.com'; })) {
+    AUTH_USERS.unshift({ email:'urieldegiorgis@gmail.com', role:'admin', areas: SECTIONS.slice() });
+    authSyncUsers(AUTH_USERS);
+  }
+  // Migración una sola vez de usuarios antiguos del navegador
+  try {
+    if (!localStorage.getItem('lh_users_migrated')) {
+      var local = JSON.parse(localStorage.getItem('lh_users') || '[]');
+      var ex = {}; AUTH_USERS.forEach(function(u){ ex[(u.email||'').toLowerCase()] = 1; });
+      var added = false;
+      local.forEach(function(u){ if (u && u.email && !ex[(u.email||'').toLowerCase()]) { AUTH_USERS.push({ email:u.email, role:u.role||'user', areas:u.areas||[] }); added = true; } });
+      if (added) await authSyncUsers(AUTH_USERS);
+      localStorage.setItem('lh_users_migrated','1');
+    }
+  } catch(e) {}
 }
-function authSaveUsers(u) { localStorage.setItem('lh_users', JSON.stringify(u)); }
+async function authSyncUsers(u) {
+  try {
+    var rows = u.map(function(x){ return { email:x.email, role:x.role||'user', areas:(x.areas||[]) }; });
+    await sb.from('hub_users').upsert(rows, { onConflict:'email' });
+    var resp = await sb.from('hub_users').select('email');
+    if (resp && resp.data) {
+      var keep = {}; u.forEach(function(x){ keep[(x.email||'').toLowerCase()] = 1; });
+      for (var i=0;i<resp.data.length;i++) {
+        var em = resp.data[i].email;
+        if (!keep[(em||'').toLowerCase()]) { await sb.from('hub_users').delete().eq('email', em); }
+      }
+    }
+  } catch(e) { console.error('hub_users sync', e); }
+}
+function startSessionWatch() {
+  if (sessionCheckTimer) clearInterval(sessionCheckTimer);
+  sessionCheckTimer = setInterval(async function(){
+    if (!currentUser || !SESSION_TOKEN) return;
+    try {
+      var resp = await sb.from('hub_users').select('session_token').eq('email', currentUser.email).maybeSingle();
+      if (resp && resp.data && resp.data.session_token && resp.data.session_token !== SESSION_TOKEN) {
+        if (sessionCheckTimer) clearInterval(sessionCheckTimer);
+        alert('Se inició sesión en otro dispositivo. Esta sesión se cerró.');
+        currentUser = null; SESSION_TOKEN = null; sessionStorage.removeItem('hub_session');
+        location.reload();
+      }
+    } catch(e) {}
+  }, 30000);
+}
+
+function authGetUsers() { return AUTH_USERS; }
+function authSaveUsers(u) { AUTH_USERS = u; authSyncUsers(u); }
 
 function authInit() {
   var users = authGetUsers();
@@ -1619,7 +1701,7 @@ function authInit() {
   // Migrate old users that have pass field — keep them, just ignore pass on login
 }
 
-function authLogin() {
+async function authLogin() {
   var email = document.getElementById('a-email').value.trim().toLowerCase();
   var errEl = document.getElementById('a-err');
   errEl.style.display = 'none';
@@ -1628,8 +1710,10 @@ function authLogin() {
   var user = users.find(function(u){ return u.email.toLowerCase() === email; });
   if (!user) { errEl.style.display = 'block'; return; }
 
-  // Save session
-  localStorage.setItem('hub_session', JSON.stringify({email: user.email}));
+  // Sesión única por usuario (token en Supabase)
+  SESSION_TOKEN = 'tok_' + Date.now() + '_' + Math.random().toString(36).slice(2,10);
+  try { await sb.from('hub_users').update({ session_token: SESSION_TOKEN }).eq('email', user.email); user.session_token = SESSION_TOKEN; } catch(e) { console.error(e); }
+  sessionStorage.setItem('hub_session', JSON.stringify({ email: user.email, token: SESSION_TOKEN }));
 
   // Show loading screen with paint-on animation
   var loading = document.getElementById('auth-loading');
@@ -1657,6 +1741,7 @@ function authLogin() {
     loading.style.display = 'none';
     currentUser = user;
     authApply();
+    startSessionWatch();
   }, 3000);
 }
 
@@ -1716,8 +1801,10 @@ function showNoAccess() {
 }
 
 function authLogout() {
-  currentUser = null;
-  localStorage.removeItem('hub_session');
+  try { if (sessionCheckTimer) clearInterval(sessionCheckTimer); } catch(e) {}
+  try { if (currentUser) sb.from('hub_users').update({ session_token: null }).eq('email', currentUser.email); } catch(e) {}
+  currentUser = null; SESSION_TOKEN = null;
+  sessionStorage.removeItem('hub_session');
   location.reload();
 }
 
@@ -1820,19 +1907,20 @@ function adminTogglePerm(idx, sec) {
 }
 
 // Patch toggleArea and showPanel with permission checks
-window.addEventListener('load', function() {
+window.addEventListener('load', async function() {
+  await authLoadUsers();
   authInit();
 
-  // Check for saved session
+  // Sesión guardada (sessionStorage: sobrevive recargas, se borra al cerrar la pestaña)
   var saved = null;
-  try { saved = JSON.parse(localStorage.getItem('hub_session')); } catch(e) {}
-  if (saved && saved.email) {
+  try { saved = JSON.parse(sessionStorage.getItem('hub_session')); } catch(e) {}
+  if (saved && saved.email && saved.token) {
     var users = authGetUsers();
     var user = users.find(function(u){ return u.email.toLowerCase() === saved.email.toLowerCase(); });
-    if (user) {
-      currentUser = user;
+    if (user && user.session_token && user.session_token === saved.token) {
+      currentUser = user; SESSION_TOKEN = saved.token;
       document.getElementById('auth-overlay').style.display = 'none';
-      authApply();
+      authApply(); startSessionWatch();
       return;
     }
   }
