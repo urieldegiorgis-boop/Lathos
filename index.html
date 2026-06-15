@@ -1942,9 +1942,12 @@ window.addEventListener('load', async function() {
   // Wrap showPanel
   var _origShowPanel = window.showPanel;
   window.showPanel = function(sectionId, area, section) {
-    // Map sectionId to area key
-    var areaKey = sectionId.split('-')[0];
+    // Map sectionId -> area key (los IDs usan prefijos cortos: v/m/p/o)
+    var PREFIX_AREA = { v:'ventas', m:'marketing', p:'producto', o:'operaciones' };
+    var areaKey;
     if (sectionId === 'organigrama') areaKey = 'organigrama';
+    else if (sectionId === 'llamadas') areaKey = 'llamadas';
+    else areaKey = PREFIX_AREA[sectionId.split('-')[0]] || sectionId.split('-')[0];
     if (!authCheckAccess(areaKey)) { showNoAccess(); return; }
     _origShowPanel.apply(this, arguments);
   };
