@@ -797,6 +797,8 @@ nav {
       <button class="sb-item" onclick="showPanel('p-metricas','Producto','Métricas')"><i class="ti ti-chart-line"></i>Métricas</button>
       <button class="sb-item" onclick="showPanel('p-kpi-upsell','Producto','KPI Upsell')"><i class="ti ti-trending-up"></i>KPI Upsell</button>
       <button class="sb-item" onclick="showPanel('p-kpi-testimonios','Producto','KPI Testimonios')"><i class="ti ti-star"></i>KPI Testimonios</button>
+      <button class="sb-item" onclick="showPanel('p-renovaciones','Producto','Renovaciones')"><i class="ti ti-refresh"></i>Renovaciones</button>
+      <button class="sb-item" id="sb-resultados" onclick="showPanel('resultados','Producto','Resultados')"><i class="ti ti-trophy"></i>Resultados</button>
       <button class="sb-item" onclick="toggleL1('psop')">
         <i class="ti ti-book"></i>SOP
         <span class="sb-chev ti ti-chevron-down" id="c-psop"></span>
@@ -944,6 +946,18 @@ nav {
               style="flex:1;width:100%;border:0;min-height:600px;background:var(--wh)"></iframe>
     </div>
 
+
+    <!-- PRODUCTO · RENOVACIONES · embebe renov-chi.vercel.app -->
+    <div class="panel" id="panel-renovaciones" style="padding:0;overflow:hidden">
+      <iframe id="renov-frame" title="Renovaciones"
+              style="flex:1;width:100%;border:0;min-height:600px;background:var(--wh)"></iframe>
+    </div>
+
+    <!-- RESULTADOS · embebe resultadoslathos.vercel.app (acceso exclusivo) -->
+    <div class="panel" id="panel-resultados" style="padding:0;overflow:hidden">
+      <iframe id="resultados-frame" title="Resultados"
+              style="flex:1;width:100%;border:0;min-height:600px;background:var(--wh)"></iframe>
+    </div>
 
     <!-- EQUIPO PANEL -->
     <div class="panel" id="panel-organigrama" style="padding:0;overflow:auto">
@@ -1245,6 +1259,22 @@ function showPanel(sectionId, area, section) {
     var df = document.getElementById('ventas-dash-frame');
     if(df && !df.getAttribute('src')) df.src = 'data:text/html;charset=utf-8;base64,' + DASH_B64;
     document.getElementById('panel-ventas-dash').classList.add('active');
+    return;
+  }
+  if(sectionId === 'p-renovaciones') {
+    var btnAddRn = document.getElementById('btn-add'); if(btnAddRn) btnAddRn.style.display = 'none';
+    var btnAddLinkRn = document.getElementById('btn-add-link'); if(btnAddLinkRn) btnAddLinkRn.style.display = 'none';
+    var rnf = document.getElementById('renov-frame');
+    if(rnf && !rnf.getAttribute('src')) rnf.src = 'https://renov-chi.vercel.app';
+    document.getElementById('panel-renovaciones').classList.add('active');
+    return;
+  }
+  if(sectionId === 'resultados') {
+    var btnAddRs = document.getElementById('btn-add'); if(btnAddRs) btnAddRs.style.display = 'none';
+    var btnAddLinkRs = document.getElementById('btn-add-link'); if(btnAddLinkRs) btnAddLinkRs.style.display = 'none';
+    var rsf = document.getElementById('resultados-frame');
+    if(rsf && !rsf.getAttribute('src')) rsf.src = 'https://resultadoslathos.vercel.app';
+    document.getElementById('panel-resultados').classList.add('active');
     return;
   }
 
@@ -1650,8 +1680,8 @@ async function deleteLlamada(){
   closeLlamadaModal();
   renderLlamadas();
 }
-var SECTIONS = ['ventas','marketing','producto','operaciones','organigrama','llamadas'];
-var SECTION_LABELS = {ventas:'Ventas',marketing:'Marketing',producto:'Producto',operaciones:'Operaciones',organigrama:'Organigrama',llamadas:'Llamadas equipo'};
+var SECTIONS = ['ventas','marketing','producto','operaciones','organigrama','llamadas','resultados'];
+var SECTION_LABELS = {ventas:'Ventas',marketing:'Marketing',producto:'Producto',operaciones:'Operaciones',organigrama:'Organigrama',llamadas:'Llamadas equipo',resultados:'Resultados'};
 var currentUser = null;
 var AUTH_USERS = [];
 var SESSION_TOKEN = null;
@@ -1774,7 +1804,7 @@ function authApply() {
   // Show ALL sidebar sections (everyone sees them) but mark locked ones
   SECTIONS.forEach(function(sec) {
     var areaBtn = document.getElementById('area-' + sec);
-    var hasAccess = allowed.indexOf(sec) >= 0;
+    var hasAccess = allowed.indexOf(sec) >= 0 || (sec === 'producto' && allowed.indexOf('resultados') >= 0);
     if (areaBtn) {
       areaBtn.style.display = '';
       areaBtn.style.opacity = hasAccess ? '' : '0.45';
@@ -1802,6 +1832,20 @@ function authApply() {
         '<button class="nav-logout" onclick="authLogout()">Salir</button>';
     }
   }
+  // Producto · Resultados es permiso independiente ('resultados')
+  (function(){
+    var isAdm = currentUser.role === 'admin';
+    var ar = currentUser.areas || [];
+    var hasProd = isAdm || ar.indexOf('producto') >= 0;
+    var hasRes  = isAdm || ar.indexOf('resultados') >= 0;
+    var rb = document.getElementById('sb-resultados');
+    if (rb) { rb.style.opacity = hasRes ? '' : '0.45'; rb.title = hasRes ? '' : 'No tienes permiso para acceder'; }
+    document.querySelectorAll('#body-producto .sb-item, #body-producto .sb-l2-item').forEach(function(el){
+      if (el.id === 'sb-resultados') return;
+      el.style.opacity = hasProd ? '' : '0.45';
+      el.title = hasProd ? '' : 'No tienes permiso para acceder';
+    });
+  })();
 }
 
 function authCheckAccess(sec) {
@@ -1952,7 +1996,8 @@ window.addEventListener('load', async function() {
   // Wrap toggleArea
   var _origToggleArea = window.toggleArea;
   window.toggleArea = function(area) {
-    if (!authCheckAccess(area)) { showNoAccess(); return; }
+    var ok = authCheckAccess(area) || (area === 'producto' && authCheckAccess('resultados'));
+    if (!ok) { showNoAccess(); return; }
     _origToggleArea.apply(this, arguments);
   };
 
