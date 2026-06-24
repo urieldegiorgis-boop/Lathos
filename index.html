@@ -1275,7 +1275,7 @@ function showPanel(sectionId, area, section) {
     var btnAddLinkR = document.getElementById('btn-add-link');
     if(btnAddLinkR) btnAddLinkR.style.display = 'none';
     var rf = document.getElementById('rep-frame');
-    if(rf && !rf.getAttribute('src')) rf.src = 'data:text/html;charset=utf-8;base64,' + REP_B64;
+    if(rf && !rf.getAttribute('src')) rf.src = 'https://reporteproducto.vercel.app';
     document.getElementById('panel-prod-reportes').classList.add('active');
     return;
   }
