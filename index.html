@@ -1285,7 +1285,7 @@ function showPanel(sectionId, area, section) {
     var btnAddLinkV = document.getElementById('btn-add-link');
     if(btnAddLinkV) btnAddLinkV.style.display = 'none';
     var vf = document.getElementById('ventas-rep-frame');
-    if(vf && !vf.getAttribute('src')) vf.src = 'data:text/html;charset=utf-8;base64,' + VENTAS_REP_B64;
+    if(vf && !vf.getAttribute('src')) vf.src = 'https://reporteventas.vercel.app';
     document.getElementById('panel-ventas-rep').classList.add('active');
     return;
   }
