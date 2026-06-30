@@ -712,7 +712,8 @@ nav {
     <div class="area-body" id="body-ventas">
       <button class="sb-item" onclick="showPanel('v-dashboard-embed','Ventas','Dashboard')"><i class="ti ti-layout-dashboard"></i>Dashboard</button>
       <button class="sb-item" onclick="showPanel('v-reportes-embed','Ventas','Reportes')"><i class="ti ti-report-analytics"></i>Reportes</button>
-      <button class="sb-item" id="sb-v-metricas" onclick="showPanel('v-metricas','Ventas','Métricas')"><i class="ti ti-chart-line"></i>Métricas</button>
+      <button class="sb-item" id="sb-v-metricas" onclick="showPanel('v-metricas','Ventas','Métricas')"><i class="ti ti-chart-line"></i>Métricas Setter / Cold caller</button>
+      <button class="sb-item" id="sb-v-metricas-closer" onclick="showPanel('v-metricas-closer','Ventas','Métricas Closer')"><i class="ti ti-chart-line"></i>Métricas Closer</button>
 
       <button class="sb-item" onclick="toggleL1('vsop')">
         <i class="ti ti-book"></i>SOP
@@ -980,9 +981,15 @@ nav {
               style="flex:1;width:100%;border:0;min-height:600px;background:var(--wh)"></iframe>
     </div>
 
-    <!-- MÉTRICAS (Ventas) · embebe trafficperformance.vercel.app (acceso exclusivo) -->
+    <!-- MÉTRICAS SETTER / COLD CALLER (Ventas) · embebe trafficperformance.vercel.app (acceso exclusivo) -->
     <div class="panel" id="panel-v-metricas" style="padding:0;overflow:hidden">
-      <iframe id="vmetricas-frame" title="Métricas"
+      <iframe id="vmetricas-frame" title="Métricas Setter / Cold caller"
+              style="flex:1;width:100%;border:0;min-height:600px;background:var(--wh)"></iframe>
+    </div>
+
+    <!-- MÉTRICAS CLOSER (Ventas) · embebe rendcloser.vercel.app (acceso exclusivo) -->
+    <div class="panel" id="panel-v-metricas-closer" style="padding:0;overflow:hidden">
+      <iframe id="vmetricas-closer-frame" title="Métricas Closer"
               style="flex:1;width:100%;border:0;min-height:600px;background:var(--wh)"></iframe>
     </div>
 
@@ -1313,6 +1320,14 @@ function showPanel(sectionId, area, section) {
     var vmf = document.getElementById('vmetricas-frame');
     if(vmf && !vmf.getAttribute('src')) vmf.src = 'https://trafficperformance.vercel.app';
     document.getElementById('panel-v-metricas').classList.add('active');
+    return;
+  }
+  if(sectionId === 'v-metricas-closer') {
+    var btnAddVmc = document.getElementById('btn-add'); if(btnAddVmc) btnAddVmc.style.display = 'none';
+    var btnAddLinkVmc = document.getElementById('btn-add-link'); if(btnAddLinkVmc) btnAddLinkVmc.style.display = 'none';
+    var vmcf = document.getElementById('vmetricas-closer-frame');
+    if(vmcf && !vmcf.getAttribute('src')) vmcf.src = 'https://rendcloser.vercel.app';
+    document.getElementById('panel-v-metricas-closer').classList.add('active');
     return;
   }
   if(sectionId === 'm-metricas-ads') {
@@ -1734,8 +1749,8 @@ async function deleteLlamada(){
   closeLlamadaModal();
   renderLlamadas();
 }
-var SECTIONS = ['ventas','marketing','producto','operaciones','organigrama','llamadas','resultados','metricas','metricas_ads'];
-var SECTION_LABELS = {ventas:'Ventas',marketing:'Marketing',producto:'Producto',operaciones:'Operaciones',organigrama:'Organigrama',llamadas:'Llamadas equipo',resultados:'Resultados',metricas:'Métricas (Ventas)',metricas_ads:'Métricas Ads (Marketing)'};
+var SECTIONS = ['ventas','marketing','producto','operaciones','organigrama','llamadas','resultados','metricas','metricas_closer','metricas_ads'];
+var SECTION_LABELS = {ventas:'Ventas',marketing:'Marketing',producto:'Producto',operaciones:'Operaciones',organigrama:'Organigrama',llamadas:'Llamadas equipo',resultados:'Resultados',metricas:'Métricas Setter/Cold (Ventas)',metricas_closer:'Métricas Closer (Ventas)',metricas_ads:'Métricas Ads (Marketing)'};
 var currentUser = null;
 var AUTH_USERS = [];
 var SESSION_TOKEN = null;
@@ -1846,7 +1861,7 @@ function authApply() {
   // Show ALL sidebar sections (everyone sees them) but mark locked ones
   SECTIONS.forEach(function(sec) {
     var areaBtn = document.getElementById('area-' + sec);
-    var hasAccess = allowed.indexOf(sec) >= 0 || (sec === 'producto' && allowed.indexOf('resultados') >= 0) || (sec === 'ventas' && allowed.indexOf('metricas') >= 0) || (sec === 'marketing' && allowed.indexOf('metricas_ads') >= 0);
+    var hasAccess = allowed.indexOf(sec) >= 0 || (sec === 'producto' && allowed.indexOf('resultados') >= 0) || (sec === 'ventas' && (allowed.indexOf('metricas') >= 0 || allowed.indexOf('metricas_closer') >= 0)) || (sec === 'marketing' && allowed.indexOf('metricas_ads') >= 0);
     if (areaBtn) {
       areaBtn.style.display = '';
       areaBtn.style.opacity = hasAccess ? '' : '0.45';
@@ -1888,16 +1903,19 @@ function authApply() {
       el.title = hasProd ? '' : 'No tienes permiso para acceder';
     });
   })();
-  // Ventas · Métricas es permiso independiente ('metricas')
+  // Ventas · Métricas es permiso independiente ('metricas' y 'metricas_closer')
   (function(){
     var isAdm = currentUser.role === 'admin';
     var ar = currentUser.areas || [];
     var hasMet = isAdm || ar.indexOf('metricas') >= 0;
+    var hasMetCloser = isAdm || ar.indexOf('metricas_closer') >= 0;
     var hasVen = isAdm || ar.indexOf('ventas') >= 0;
     var mb = document.getElementById('sb-v-metricas');
     if (mb) { mb.style.opacity = hasMet ? '' : '0.45'; mb.title = hasMet ? '' : 'No tienes permiso para acceder'; }
+    var mbc = document.getElementById('sb-v-metricas-closer');
+    if (mbc) { mbc.style.opacity = hasMetCloser ? '' : '0.45'; mbc.title = hasMetCloser ? '' : 'No tienes permiso para acceder'; }
     document.querySelectorAll('#body-ventas .sb-item, #body-ventas .sb-l2-item').forEach(function(el){
-      if (el.id === 'sb-v-metricas') return;
+      if (el.id === 'sb-v-metricas' || el.id === 'sb-v-metricas-closer') return;
       el.style.opacity = hasVen ? '' : '0.45';
       el.title = hasVen ? '' : 'No tienes permiso para acceder';
     });
@@ -2082,7 +2100,7 @@ window.addEventListener('load', async function() {
   // Wrap toggleArea
   var _origToggleArea = window.toggleArea;
   window.toggleArea = function(area) {
-    var ok = authCheckAccess(area) || (area === 'producto' && authCheckAccess('resultados')) || (area === 'ventas' && authCheckAccess('metricas')) || (area === 'marketing' && authCheckAccess('metricas_ads'));
+    var ok = authCheckAccess(area) || (area === 'producto' && authCheckAccess('resultados')) || (area === 'ventas' && (authCheckAccess('metricas') || authCheckAccess('metricas_closer'))) || (area === 'marketing' && authCheckAccess('metricas_ads'));
     if (!ok) { showNoAccess(); return; }
     _origToggleArea.apply(this, arguments);
   };
@@ -2096,6 +2114,7 @@ window.addEventListener('load', async function() {
     if (sectionId === 'organigrama') areaKey = 'organigrama';
     else if (sectionId === 'llamadas') areaKey = 'llamadas';
     else if (sectionId === 'v-metricas') areaKey = 'metricas';
+    else if (sectionId === 'v-metricas-closer') areaKey = 'metricas_closer';
     else if (sectionId === 'm-metricas-ads') areaKey = 'metricas_ads';
     else areaKey = PREFIX_AREA[sectionId.split('-')[0]] || sectionId.split('-')[0];
     if (!authCheckAccess(areaKey)) { showNoAccess(); return; }
