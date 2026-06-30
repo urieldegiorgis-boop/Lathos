@@ -2196,10 +2196,35 @@ function render(){
 function editM(dk,idx){_dk=dk;_idx=idx;var m=DEPTS.find(function(d){return d.key===dk;}).members[idx];document.getElementById('modal-title').textContent='Editar persona';document.getElementById('m-name').value=m.n;document.getElementById('m-role').value=m.r;document.getElementById('m-type').value=m.t;document.getElementById('m-del').style.display='';document.getElementById('modal-bg').classList.add('open');}
 function addM(dk){_dk=dk;_idx=null;document.getElementById('modal-title').textContent='Agregar persona';document.getElementById('m-name').value='';document.getElementById('m-role').value='';document.getElementById('m-type').value='other';document.getElementById('m-del').style.display='none';document.getElementById('modal-bg').classList.add('open');}
 function closeM(){document.getElementById('modal-bg').classList.remove('open');}
-function saveM(){var n=document.getElementById('m-name').value.trim();var r=document.getElementById('m-role').value.trim();var t=document.getElementById('m-type').value;if(!n)return;var dept=DEPTS.find(function(d){return d.key===_dk;});if(_idx===null)dept.members.push({n:n,r:r,t:t});else dept.members[_idx]={n:n,r:r,t:t};closeM();render();}
-function delM(){DEPTS.find(function(d){return d.key===_dk;}).members.splice(_idx,1);closeM();render();}
+function saveM(){var n=document.getElementById('m-name').value.trim();var r=document.getElementById('m-role').value.trim();var t=document.getElementById('m-type').value;if(!n)return;var dept=DEPTS.find(function(d){return d.key===_dk;});if(_idx===null)dept.members.push({n:n,r:r,t:t});else dept.members[_idx]={n:n,r:r,t:t};closeM();render();saveDepts();}
+function delM(){DEPTS.find(function(d){return d.key===_dk;}).members.splice(_idx,1);closeM();render();saveDepts();}
 document.getElementById('modal-bg').addEventListener('click',function(e){if(e.target===this)closeM();});
+
+/* ── Persistencia del organigrama en Supabase (panel_state, ns='organigrama') ── */
+async function loadDepts(){
+  try{
+    if(typeof sb==='undefined'||!sb)return;
+    var resp=await sb.from('panel_state').select('data').eq('ns','organigrama').maybeSingle();
+    if(resp&&!resp.error&&resp.data&&resp.data.data&&Array.isArray(resp.data.data.depts)&&resp.data.data.depts.length){
+      DEPTS.length=0; resp.data.data.depts.forEach(function(d){DEPTS.push(d);});
+      render();
+    }
+  }catch(e){ console.error('organigrama load', e); }
+}
+var _orgSaveT=null;
+function saveDepts(){
+  if(typeof sb==='undefined'||!sb)return;
+  clearTimeout(_orgSaveT);
+  _orgSaveT=setTimeout(async function(){
+    try{
+      var r=await sb.from('panel_state').upsert({ns:'organigrama',data:{depts:DEPTS},updated_at:new Date().toISOString()},{onConflict:'ns'});
+      if(r&&r.error)console.error('organigrama save', r.error);
+    }catch(e){ console.error('organigrama save', e); }
+  },400);
+}
+
 render();
+loadDepts();
 
 </script>
 
